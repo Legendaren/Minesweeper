@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://d01f0agnpgnpd"]
+
+[ext_resource type="Script" path="res://CellGrid.gd" id="1_25rxw"]
+[ext_resource type="Script" path="res://cell_grid_generator.gd" id="2_wg45s"]
+
+[node name="Root" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CellGrid" type="GridContainer" parent="." node_paths=PackedStringArray("cell_grid_generator")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -92.5
+offset_top = -59.0
+offset_right = 92.5
+offset_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 32
+columns = 16
+script = ExtResource("1_25rxw")
+cell_grid_generator = NodePath("CellGridGenerator")
+
+[node name="CellGridGenerator" type="Node" parent="CellGrid"]
+script = ExtResource("2_wg45s")
