@@ -62,6 +62,8 @@ func reveal_cell():
 	print("Cell neighbor mines: ", neighbor_mine_count)
 	print("Cell has state ", Enums.CellState.keys()[cell_state])
 	EventBus.cell_left_click.emit(self)
+	if cell_state == Enums.CellState.MINE:
+		EventBus.mine_revealed.emit(self)
 
 func flag_cell():
 	if is_revealed:
