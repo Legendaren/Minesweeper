@@ -51,6 +51,8 @@ func neighbor_empty_cells(grid: Array[Array], row: int, col: int) -> Array:
 		var neighbor_cell: CellComponent = grid[p_row][p_col]
 		if neighbor_cell.cell_state == Enums.CellState.EMPTY:
 			empty_cells.append(pos)
+		elif neighbor_cell.cell_state == Enums.CellState.NUMBER:
+			empty_cells.append(pos)
 	return empty_cells
 	
 
@@ -65,8 +67,9 @@ func connected_neighbor_empty_cells(grid: Array[Array], row: int, col: int) -> A
 		var neighbor_str = "%d,%d" % [neighbor_pos[0], neighbor_pos[1]]
 		if not connected_cells.has(neighbor_str):
 			connected_cells[neighbor_str] = neighbor_pos
-			var nested_connected_neighbor = neighbor_empty_cells(grid, neighbor_pos[0], neighbor_pos[1])
-			neighbor_queue.append_array(nested_connected_neighbor)
+			if not cells[neighbor_pos[0]][neighbor_pos[1]].cell_state == Enums.CellState.NUMBER:
+				var nested_connected_neighbor = neighbor_empty_cells(grid, neighbor_pos[0], neighbor_pos[1])
+				neighbor_queue.append_array(nested_connected_neighbor)
 
 	var connected_cells_arr = []
 	for cell_str in connected_cells:

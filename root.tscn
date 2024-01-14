@@ -28,7 +28,7 @@ columns = 16
 script = ExtResource("1_25rxw")
 ROW_COUNT = 16
 COLUMN_COUNT = 16
-MINE_COUNT = 15
+MINE_COUNT = 30
 cell_grid_generator = NodePath("Cell Grid Generator")
 
 [node name="Cell Grid Generator" type="Node" parent="Cell Grid"]
