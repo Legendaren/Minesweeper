@@ -9,7 +9,7 @@ func generate_empty_grid(row_count: int, column_count: int) -> Array[Array]:
 		var row: Array[CellComponent] = []
 		for j in column_count:
 			var cell_instance: CellComponent = cell_scene.instantiate()
-			cell_instance.init_cell()
+			cell_instance.init_cell(i, j)
 			row.append(cell_instance)
 		grid.append(row)
 	return grid
@@ -44,5 +44,5 @@ func update_cells_based_on_neighbor_mines(grid: Array[Array]) -> void:
 	for i in range(grid.size()):
 		for j in range(grid[0].size()):
 			var cell: CellComponent = grid[i][j]
-			cell.init_cell()
+			cell.init_cell(i, j)
 

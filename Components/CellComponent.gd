@@ -27,6 +27,8 @@ const neighbor_mines_to_region := {
 
 @onready var sprite: Sprite2D = $Area2D/Sprite2D
 
+var row: int
+var column: int
 var is_revealed := false
 var is_flagged := false
 var is_mine_revealed := false
@@ -38,7 +40,9 @@ func _ready():
 	EventBus.mine_revealed.connect(on_mine_reveal)
 	sprite.region_rect = EMPTY_HIDDEN_REGION
 	
-func init_cell():
+func init_cell(row: int, column: int):
+	self.row = row
+	self.column = column
 	if cell_state == Enums.CellState.MINE:
 		actual_cell_region = MINE_REGION	
 	elif neighbor_mine_count == 0:

@@ -18,22 +18,24 @@ func _ready():
 	for i in range(MINE_COUNT):
 		cell_grid_generator.add_mine_to_grid(grid)
 		
-	for row in grid:
-		for cell in row:
+	for i in range(grid.size()):
+		var row = grid[i]
+		for j in range(row.size()):
+			var cell = row[j]
 			add_child(cell)
-			cell.init_cell()
+			cell.init_cell(i, j)
 
 
 func on_mine_reveal(_cell: CellComponent) -> void:
 	reveal_all_cells()
 	
 	
-func on_empty_cell_reveal(_cell: CellComponent) -> void:
+func on_empty_cell_reveal(cell: CellComponent) -> void:
 	print("Empty cell reveal")
-	var connected_empty_cells = connected_neighbor_empty_cells(cells, 5, 5)
+	var connected_empty_cells = connected_neighbor_empty_cells(cells, cell.row, cell.column)
 	for cell_pos in connected_empty_cells:
-		var cell: CellComponent = cells[cell_pos[0]][cell_pos[1]]
-		cell.reveal_cell()
+		var empty_cell: CellComponent = cells[cell_pos[0]][cell_pos[1]]
+		empty_cell.reveal_cell()
 	
 	
 func reveal_all_cells() -> void:
