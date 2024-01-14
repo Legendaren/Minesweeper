@@ -32,11 +32,12 @@ func add_mine_to_grid(grid: Array[Array]) -> void:
 
 
 func increment_neighbor_mines(grid: Array[Array], row: int, col: int) -> void:
-	for pos in neighbor_positions(grid, row, col):
+	for pos in CellUtils.neighbor_positions(grid, row, col):
 		var r = pos[0]
 		var c = pos[1]
 		if CellUtils.in_bounds(grid, r, c):
 			grid[r][c].neighbor_mine_count += 1
+			grid[r][c].cell_state = Enums.CellState.NUMBER
 
 
 func update_cells_based_on_neighbor_mines(grid: Array[Array]) -> void:
@@ -45,20 +46,3 @@ func update_cells_based_on_neighbor_mines(grid: Array[Array]) -> void:
 			var cell: CellComponent = grid[i][j]
 			cell.init_cell()
 
-func neighbor_positions(grid: Array[Array], row: int, col: int) -> Array:
-	var top_left = [row-1, col-1]
-	var top_center = [row-1, col]
-	var top_right = [row-1, col+1]
-	var center_left = [row, col-1]
-	var center_right = [row, col+1]
-	var bottom_left = [row+1, col-1]
-	var bottom_center = [row+1, col]
-	var bottom_right = [row+1, col+1]
-	var possible_positions = [top_left, top_center, top_right, center_left, center_right, bottom_left, bottom_center, bottom_right]
-	var valid_positions = []
-	for pos in possible_positions:
-		var r = pos[0]
-		var c = pos[1]
-		if CellUtils.in_bounds(grid, r, c):
-			valid_positions.append(pos)
-	return valid_positions

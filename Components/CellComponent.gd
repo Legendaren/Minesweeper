@@ -58,16 +58,18 @@ func region_from_neighbor_mine_count(neighbor_mines: int):
 	return neighbor_mines_to_region.get(neighbor_mines)
 
 func click_cell():
+	print("Cell selected")
+	print("Cell neighbor mines: ", neighbor_mine_count)
+	print("Cell has state ", Enums.CellState.keys()[cell_state])
 	reveal_cell()
 	if cell_state == Enums.CellState.MINE:
 		EventBus.mine_revealed.emit(self)
+	elif cell_state == Enums.CellState.EMPTY:
+		EventBus.empty_cell_revealed.emit(self)
 
 func reveal_cell():
 	sprite.region_rect = actual_cell_region
 	is_revealed = true
-	print("Cell selected")
-	print("Cell neighbor mines: ", neighbor_mine_count)
-	print("Cell has state ", Enums.CellState.keys()[cell_state])
 	EventBus.cell_left_click.emit(self)
 
 func flag_cell():
