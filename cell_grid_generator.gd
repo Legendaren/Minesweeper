@@ -15,9 +15,7 @@ func generate_empty_grid(row_count: int, column_count: int) -> Array[Array]:
 	return grid
 
 
-func add_mine_to_grid(grid: Array[Array]):
-	var row_count = len(grid)
-	var column_count = len(grid[0])
+func add_mine_to_grid(grid: Array[Array]) -> void:
 	var random_pos = CellUtils.random_pos(grid)
 	var random_row = random_pos.x
 	var random_col = random_pos.y
@@ -41,7 +39,7 @@ func increment_neighbor_mines(grid: Array[Array], row: int, col: int) -> void:
 			grid[r][c].neighbor_mine_count += 1
 
 
-func update_cells_based_on_neighbor_mines(grid: Array[Array]):
+func update_cells_based_on_neighbor_mines(grid: Array[Array]) -> void:
 	for i in range(grid.size()):
 		for j in range(grid[0].size()):
 			var cell: CellComponent = grid[i][j]
