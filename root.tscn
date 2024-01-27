@@ -1,38 +1,12 @@
 [gd_scene load_steps=4 format=3 uid="uid://d01f0agnpgnpd"]
 
-[ext_resource type="Script" path="res://CellGrid.gd" id="1_25rxw"]
-[ext_resource type="Script" path="res://cell_grid_generator.gd" id="2_wg45s"]
+[ext_resource type="TileSet" uid="uid://bjisbgpk44ysx" path="res://hex_tile_set.tres" id="2_fbrv7"]
 [ext_resource type="Script" path="res://game_over_text.gd" id="3_lbu3m"]
+[ext_resource type="Script" path="res://hex_grid.gd" id="3_xgcwh"]
 
 [node name="Root" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-
-[node name="Cell Grid" type="GridContainer" parent="." node_paths=PackedStringArray("cell_grid_generator")]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -92.5
-offset_top = -59.0
-offset_right = 92.5
-offset_bottom = 59.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/h_separation = 32
-theme_override_constants/v_separation = 32
-columns = 16
-script = ExtResource("1_25rxw")
-ROW_COUNT = 16
-COLUMN_COUNT = 16
-MINE_COUNT = 30
-cell_grid_generator = NodePath("Cell Grid Generator")
-
-[node name="Cell Grid Generator" type="Node" parent="Cell Grid"]
-script = ExtResource("2_wg45s")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 8
@@ -50,6 +24,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Game Over Text" type="Label" parent="CenterContainer"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.74902, 0.0117647, 0.109804, 1)
 theme_override_font_sizes/font_size = 48
@@ -57,3 +32,8 @@ text = "Game Over"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("3_lbu3m")
+
+[node name="Hexagon Tilemap" type="TileMap" parent="."]
+tile_set = ExtResource("2_fbrv7")
+format = 2
+script = ExtResource("3_xgcwh")

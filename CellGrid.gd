@@ -31,7 +31,6 @@ func on_mine_reveal(_cell: CellComponent) -> void:
 	
 	
 func on_empty_cell_reveal(cell: CellComponent) -> void:
-	print("Empty cell reveal")
 	var connected_empty_cells = connected_neighbor_empty_cells(cells, cell.row, cell.column)
 	for cell_pos in connected_empty_cells:
 		var empty_cell: CellComponent = cells[cell_pos[0]][cell_pos[1]]

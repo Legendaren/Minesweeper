@@ -1,6 +1,11 @@
 class_name CellUtils
 extends Node
 
+const cube_direction_vectors: Array[Vector3i] = [
+	Vector3i(+1, 0, -1), Vector3i(+1, -1, 0), Vector3i(0, -1, +1), 
+	Vector3i(-1, 0, +1), Vector3i(-1, +1, 0), Vector3i(0, +1, -1), 
+]
+
 static var rng = RandomNumberGenerator.new()
 
 static func in_bounds(grid: Array[Array], row: int, col: int) -> bool:
@@ -36,3 +41,27 @@ static func neighbor_positions(grid: Array[Array], row: int, col: int) -> Array:
 		if CellUtils.in_bounds(grid, r, c):
 			valid_positions.append(pos)
 	return valid_positions
+
+
+static func cube_to_oddr(pos: Vector3i) -> Vector2i:
+	var col: int = pos.x + (pos.y - (pos.y & 1)) / 2
+	var row: int = pos.y
+	return Vector2i(col, row)
+
+
+static func oddr_to_cube(pos: Vector2i) -> Vector3i:
+	var q: int = pos.x - (pos.y - (pos.y & 1)) / 2
+	var r: int = pos.y
+	return Vector3i(q, r, -q-r)
+
+
+static func cube_distance(a: Vector3i, b: Vector3i) -> int:
+	var vec: Vector3i = a - b
+	return (abs(vec.x) + abs(vec.y) + abs(vec.z)) / 2
+
+
+static func cube_neighbors(cube: Vector3i) -> Array:
+	var neighbors: Array[Vector3i] = []
+	for vec in cube_direction_vectors:
+		neighbors.append(vec + cube)
+	return neighbors
