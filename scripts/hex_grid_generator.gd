@@ -18,7 +18,6 @@ func _create_empty_grid(start: Vector3i, radius_limit: int) -> Dictionary:
 	stack.append(start)
 	while not stack.is_empty():
 		var cube = stack.pop_back()
-		var oddr = CellUtils.cube_to_oddr(cube)
 		grid[cube] = CellComponent.new(cube)
 		var neighbors: Array[Vector3i] = CellUtils.cube_neighbors(cube)
 		for n in neighbors:
@@ -31,14 +30,10 @@ func _add_mines_to_grid(grid: Dictionary, mines: int) -> Dictionary:
 	var added_mines := {}
 	var new_grid := grid.duplicate(true)
 	for i in range(mines):
-		var keys := grid.keys()
-		var random_index: int = randi() % keys.size()
-		while random_index in added_mines:
-			random_index = randi() % keys.size()
-		var random_cube: Vector3i = keys[random_index]
-		var random_cell: CellComponent = grid[random_cube]
-		random_cell.set_cell_state(Enums.CellState.MINE)
-		added_mines[random_index] = true
+		var random_cube: Vector3i = _random_cube_with_no_mine(grid, added_mines)
+		var random_cell: CellComponent = new_grid[random_cube]
+		random_cell.cell_state = Enums.CellState.MINE
+		added_mines[random_cube] = true
 	return new_grid
 
 
@@ -51,10 +46,18 @@ func _update_mine_count(grid: Dictionary) -> void:
 			cell.cell_state = Enums.CellState.NUMBER
 
 
-static func _calculate_neighbor_mine_count(grid: Dictionary, cell: CellComponent) -> int:
-	var neighbor_cubes: Array[Vector3i] = CellUtils.cube_neighbors(cell.pos)
-	var count: int = 0
-	for cube in neighbor_cubes:
+func _calculate_neighbor_mine_count(grid: Dictionary, cell: CellComponent) -> int:
+	var count := 0
+	for cube: Vector3i in CellUtils.cube_neighbors(cell.pos):
 		if cube in grid and grid[cube].cell_state == Enums.CellState.MINE:
 			count += 1
 	return count
+
+func _random_cube_with_no_mine(grid: Dictionary, added_mines: Dictionary) -> Vector3i:
+	var keys := grid.keys()
+	var random_index: int = randi() % keys.size()
+	var random_cube: Vector3i = keys[random_index]
+	while random_cube in added_mines:
+		random_index = randi() % keys.size()
+		random_cube = keys[random_index]
+	return random_cube

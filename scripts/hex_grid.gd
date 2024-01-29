@@ -31,23 +31,29 @@ var is_mine_revealed := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	EventBus.mine_revealed.connect(_on_any_mine_reveal)
+	EventBus.cell_revealed.connect(_on_cell_reveal)
+	EventBus.cell_flagged.connect(_on_cell_flag)
 	cells = hex_grid_generator.generate_grid(START_CUBE, RADIUS_LIMIT, MINE_COUNT)
-	_display_grid()
+	_update_grid()
+
+	
+func _on_cell_reveal(cell: CellComponent):
+	_update_cell(cell)
+	if cell.cell_state == Enums.CellState.MINE:
+		is_mine_revealed = true
+		return
+	
+	if cell.cell_state == Enums.CellState.EMPTY:
+		_reveal_connected_empty_cells(cell)
+	
+	
+func _on_cell_flag(cell: CellComponent):
+	_update_cell(cell)
 
 
-func _on_any_mine_reveal(cell: CellComponent):
-	is_mine_revealed = true
-
-func _display_grid() -> void:
+func _update_grid() -> void:
 	for cell: CellComponent in cells.values():
-		var oddr: Vector2i = CellUtils.cube_to_oddr(cell.pos)
-		if not cell.is_revealed:
-			_set_cell_v2(oddr, HIDDEN)
-		elif cell.cell_state == Enums.CellState.MINE:
-			_set_cell_v2(oddr, RED_MINE)
-		else:
-			_set_cell_v2(oddr, MINE_COUNT_TO_ATLAS[cell.neighbor_mine_count])
+		_update_cell(cell)
 	
 
 func _input(event: InputEvent) -> void:	
@@ -60,68 +66,68 @@ func _input(event: InputEvent) -> void:
 	var cell_cube: Vector3i =  CellUtils.oddr_to_cube(cell_pos)
 	var cell: CellComponent = cells[cell_cube]
 	if event.is_action_pressed("select_cell"):
-		select_cell(cell)
+		_select_cell(cell)
 	if event.is_action_pressed("flag_cell"):
-		flag_cell(cell)
+		_flag_cell(cell)
 
 
 func _set_cell_v2(cell_pos: Vector2i, atlas_pos: Vector2i) -> void:
 	set_cell(LAYER, cell_pos, SOURCE_ID, atlas_pos)
 
 
-func _reveal_cell(cell: CellComponent) -> void:
-	cell.reveal_cell()
+func _update_cell(cell: CellComponent) -> void:
 	var oddr: Vector2i = CellUtils.cube_to_oddr(cell.pos)
-	if cell.cell_state == Enums.CellState.MINE:
-		_set_cell_v2(oddr, RED_MINE)
-		EventBus.mine_revealed.emit(cell)
+	var texture: Vector2i
+	if cell.is_flagged:
+		texture = FLAG
+	elif not cell.is_revealed:
+		texture = HIDDEN
+	elif cell.cell_state == Enums.CellState.MINE:
+		texture = RED_MINE
 	else:
-		_set_cell_v2(oddr, MINE_COUNT_TO_ATLAS[cell.neighbor_mine_count])
+		texture = MINE_COUNT_TO_ATLAS[cell.neighbor_mine_count]
+	_set_cell_v2(oddr, texture)
+
+
+func _reveal_cell(cell: CellComponent) -> void:
+	cell.reveal()
+	_update_cell(cell)
 
 
 func _reveal_connected_empty_cells(cell: CellComponent) -> void:
+	var connected_empty_cells: Array[CellComponent] = _connected_empty_cells(cell)
+	for connected_cell in connected_empty_cells:
+		_reveal_cell(connected_cell)
+
+
+func _connected_empty_cells(cell: CellComponent) -> Array[CellComponent]:
 	var stack: Array[Vector3i] = [cell.pos]
 	var visited: Dictionary = {}
+	var connected_cells: Array[CellComponent] = []
 	while stack:
 		var popped_cube: Vector3i = stack.pop_back()
-		var popped_cell : CellComponent = cells[popped_cube]
-		if popped_cube in visited:
+		if popped_cube not in cells or popped_cube in visited:
 			continue
-		if popped_cell.cell_state == Enums.CellState.MINE:
-			continue
-			
-		_reveal_cell(popped_cell)
 
-		if popped_cell.neighbor_mine_count > 0:
+		var popped_cell: CellComponent = cells[popped_cube]
+		if popped_cell.is_flagged:
 			continue
-		
+
+		connected_cells.append(popped_cell)
 		visited[popped_cube] = true
-		for neighbor_cube: Vector3i in CellUtils.cube_neighbors(popped_cube):
-			if neighbor_cube in cells:
-				stack.append(neighbor_cube)
+
+		if popped_cell.neighbor_mine_count == 0:
+			stack.append_array(CellUtils.cube_neighbors(popped_cube))
+	return connected_cells
 
 
-func select_cell(cell: CellComponent) -> void:
+func _select_cell(cell: CellComponent) -> void:
+	if is_mine_revealed or cell.is_flagged:
+		return
+	cell.select()
+
+
+func _flag_cell(cell: CellComponent) -> void:
 	if is_mine_revealed:
 		return
-	if cell.is_revealed or cell.is_flagged:
-		return
-		
-	var oddr: Vector2i = CellUtils.cube_to_oddr(cell.pos)
-	_reveal_cell(cell)
-	if cell.cell_state == Enums.CellState.EMPTY:
-		_reveal_connected_empty_cells(cell)
-
-
-func flag_cell(cell: CellComponent) -> void:
-	if is_mine_revealed:
-		return
-	if cell.is_revealed:
-		return
-		
-	var oddr: Vector2i = CellUtils.cube_to_oddr(cell.pos)
-	if cell.is_flagged:
-		_set_cell_v2(oddr, HIDDEN)
-	else:
-		_set_cell_v2(oddr, FLAG)
-	cell.flag_cell()
+	cell.flag()
