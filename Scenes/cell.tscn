@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cxc5yg3bsk4sk"]
 
-[ext_resource type="Script" path="res://Components/CellComponent.gd" id="1_1c5r8"]
-[ext_resource type="Texture2D" uid="uid://62felg14102g" path="res://Assets/cell_atlas.png" id="2_whc6x"]
+[ext_resource type="Script" path="res://components/cell_component.gd" id="1_3bvrg"]
+[ext_resource type="Texture2D" uid="uid://62felg14102g" path="res://assets/image/cell_atlas.png" id="2_hwupw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ygpfl"]
 size = Vector2(32, 32)
@@ -9,13 +9,13 @@ size = Vector2(32, 32)
 [node name="Cell" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_1c5r8")
+script = ExtResource("1_3bvrg")
 
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="Area2D"]
 scale = Vector2(2, 2)
-texture = ExtResource("2_whc6x")
+texture = ExtResource("2_hwupw")
 region_enabled = true
 region_rect = Rect2(4, 4, 16, 16)
 

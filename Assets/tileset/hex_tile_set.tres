@@ -1,9 +1,9 @@
 [gd_resource type="TileSet" load_steps=3 format=3 uid="uid://bjisbgpk44ysx"]
 
-[ext_resource type="Texture2D" uid="uid://jwtfq4iatiad" path="res://Assets/spritesheet.png" id="1_imnma"]
+[ext_resource type="Texture2D" uid="uid://jwtfq4iatiad" path="res://assets/image/spritesheet.png" id="1_6q8bn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_slu5w"]
-texture = ExtResource("1_imnma")
+texture = ExtResource("1_6q8bn")
 texture_region_size = Vector2i(34, 34)
 0:0/0 = 0
 1:0/0 = 0

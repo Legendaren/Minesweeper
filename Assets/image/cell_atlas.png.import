@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5kmq7bihfgwc"
-path="res://.godot/imported/hex_mine.png-19445b2ee12186d55d6303c8224f687a.ctex"
+uid="uid://62felg14102g"
+path="res://.godot/imported/cell_atlas.png-1273d2ff35281019b21488839ad74ce1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/hex_mine.png"
-dest_files=["res://.godot/imported/hex_mine.png-19445b2ee12186d55d6303c8224f687a.ctex"]
+source_file="res://assets/image/cell_atlas.png"
+dest_files=["res://.godot/imported/cell_atlas.png-1273d2ff35281019b21488839ad74ce1.ctex"]
 
 [params]
 

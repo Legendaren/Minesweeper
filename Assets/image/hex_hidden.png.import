@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0c3tmtox3lee"
-path="res://.godot/imported/hex_mine_red.png-fd1d981675a277c80500cbf5c2133d3d.ctex"
+uid="uid://dsoactvt54mbf"
+path="res://.godot/imported/hex_hidden.png-d7fc6e74583e0be9cc763a2bac50c7fd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/hex_mine_red.png"
-dest_files=["res://.godot/imported/hex_mine_red.png-fd1d981675a277c80500cbf5c2133d3d.ctex"]
+source_file="res://assets/image/hex_hidden.png"
+dest_files=["res://.godot/imported/hex_hidden.png-d7fc6e74583e0be9cc763a2bac50c7fd.ctex"]
 
 [params]
 

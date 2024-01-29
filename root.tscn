@@ -1,39 +1,49 @@
-[gd_scene load_steps=4 format=3 uid="uid://d01f0agnpgnpd"]
+[gd_scene load_steps=5 format=3 uid="uid://d01f0agnpgnpd"]
 
-[ext_resource type="TileSet" uid="uid://bjisbgpk44ysx" path="res://hex_tile_set.tres" id="2_fbrv7"]
-[ext_resource type="Script" path="res://game_over_text.gd" id="3_lbu3m"]
-[ext_resource type="Script" path="res://hex_grid.gd" id="3_xgcwh"]
+[ext_resource type="TileSet" uid="uid://bjisbgpk44ysx" path="res://assets/tileset/hex_tile_set.tres" id="2_fbrv7"]
+[ext_resource type="Script" path="res://scripts/game_over_text.gd" id="3_lbu3m"]
+[ext_resource type="Script" path="res://scripts/hex_grid_generator.gd" id="3_nssew"]
+[ext_resource type="Script" path="res://scripts/hex_grid.gd" id="3_xgcwh"]
 
 [node name="Root" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -574.0
-offset_top = -323.0
-offset_right = 577.0
-offset_bottom = 324.0
+[node name="Hexagon Tilemap" type="TileMap" parent="Camera2D"]
+tile_set = ExtResource("2_fbrv7")
+format = 2
+script = ExtResource("3_xgcwh")
+
+[node name="Hex Grid Generator" type="Node" parent="Camera2D/Hexagon Tilemap"]
+script = ExtResource("3_nssew")
+
+[node name="CenterContainer" type="CenterContainer" parent="Camera2D"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Game Over Text" type="Label" parent="CenterContainer"]
-visible = false
+[node name="Control" type="Control" parent="Camera2D/CenterContainer"]
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.74902, 0.0117647, 0.109804, 1)
-theme_override_font_sizes/font_size = 48
-text = "Game Over"
-horizontal_alignment = 1
-vertical_alignment = 1
-script = ExtResource("3_lbu3m")
 
-[node name="Hexagon Tilemap" type="TileMap" parent="."]
-tile_set = ExtResource("2_fbrv7")
-format = 2
-script = ExtResource("3_xgcwh")
+[node name="RichTextLabel" type="RichTextLabel" parent="Camera2D/CenterContainer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -50.0
+offset_right = 150.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[center]Game Over[/center]"
+script = ExtResource("3_lbu3m")

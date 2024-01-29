@@ -60,7 +60,7 @@ static func cube_distance(a: Vector3i, b: Vector3i) -> int:
 	return (abs(vec.x) + abs(vec.y) + abs(vec.z)) / 2
 
 
-static func cube_neighbors(cube: Vector3i) -> Array:
+static func cube_neighbors(cube: Vector3i) -> Array[Vector3i]:
 	var neighbors: Array[Vector3i] = []
 	for vec in cube_direction_vectors:
 		neighbors.append(vec + cube)

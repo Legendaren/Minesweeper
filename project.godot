@@ -13,16 +13,16 @@ config_version=5
 config/name="Minesweeper"
 run/main_scene="res://root.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://assets/image/icon.svg"
 
 [autoload]
 
-EventBus="*res://Components/EventBus.gd"
+EventBus="*res://components/event_bus.gd"
 Enums="*res://enum/enums.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/HexGrid/plugin.cfg")
+enabled=PackedStringArray()
 
 [input]
 

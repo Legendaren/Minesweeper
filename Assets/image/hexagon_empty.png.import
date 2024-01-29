@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsoactvt54mbf"
-path="res://.godot/imported/hex_hidden.png-a5824d64f9301b088fd0af7034d86121.ctex"
+uid="uid://cnnt3ltha1d0t"
+path="res://.godot/imported/hexagon_empty.png-27bc5d310cf1f907f15fa0af39a03833.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/hex_hidden.png"
-dest_files=["res://.godot/imported/hex_hidden.png-a5824d64f9301b088fd0af7034d86121.ctex"]
+source_file="res://assets/image/hexagon_empty.png"
+dest_files=["res://.godot/imported/hexagon_empty.png-27bc5d310cf1f907f15fa0af39a03833.ctex"]
 
 [params]
 
