@@ -4,9 +4,9 @@ class_name HexGrid
 const LAYER := 0
 const SOURCE_ID := 2
 
-const RADIUS_LIMIT := 5
+const RADIUS_LIMIT := 15
 const START_CUBE := Vector3i(0, 0, 0)
-const MINE_COUNT := 5
+const MINE_COUNT := 50
 
 const ONE := Vector2i(0, 0)
 const TWO := Vector2i(1, 0)
@@ -28,14 +28,14 @@ const MINE_COUNT_TO_ATLAS := {
 var cells := {}
 var is_mine_revealed := false
 var has_won := false
+var at_least_one_cell_selected := false
 @onready var hex_grid_generator: HexGridGenerator = $"Hex Grid Generator"
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	EventBus.cell_revealed.connect(_on_cell_reveal)
-	EventBus.cell_flagged.connect(_on_cell_flag)
+	EventBus.cell_flagged.connect(_on_cell_flagged)
 	EventBus.mine_revealed.connect(_on_mine_reveal)
-	cells = hex_grid_generator.generate_grid(START_CUBE, RADIUS_LIMIT, MINE_COUNT)
+	cells = hex_grid_generator.generate_empty_grid(START_CUBE, RADIUS_LIMIT)
 	_update_grid()
 
 
@@ -45,11 +45,11 @@ func _on_mine_reveal(cell: CellComponent):
 
 func _on_cell_reveal(cell: CellComponent):
 	_update_cell(cell)
-	if cell.state == Enums.CellState.EMPTY:
+	if cell.is_empty():
 		_reveal_connected_empty_cells(cell)
 
 
-func _on_cell_flag(cell: CellComponent):
+func _on_cell_flagged(cell: CellComponent):
 	_update_cell(cell)
 
 
@@ -85,7 +85,7 @@ func _update_cell(cell: CellComponent) -> void:
 		texture = FLAG
 	elif not cell.is_revealed:
 		texture = HIDDEN
-	elif cell.state == Enums.CellState.MINE:
+	elif cell.is_mine():
 		texture = RED_MINE
 	else:
 		texture = MINE_COUNT_TO_ATLAS[cell.neighbor_mine_count]
@@ -107,29 +107,22 @@ func _reveal_connected_empty_cells(cell: CellComponent) -> void:
 
 
 func _connected_empty_cells(cell: CellComponent) -> Array[CellComponent]:
-	var stack: Array[Vector3i] = [cell.pos]
-	var visited: Dictionary = {}
 	var connected_cells: Array[CellComponent] = []
-	while stack:
-		var popped_cube: Vector3i = stack.pop_back()
-		if popped_cube not in cells or popped_cube in visited:
+	var neighbor_cubes := CellUtils.cube_neighbors(cell.pos)
+	for neighbor in neighbor_cubes:
+		if neighbor not in cells:
 			continue
-
-		var popped_cell: CellComponent = cells[popped_cube]
-		if popped_cell.is_flagged:
+		var neighbor_cell: CellComponent = cells[neighbor]
+		if neighbor_cell.is_flagged:
 			continue
-
-		connected_cells.append(popped_cell)
-		visited[popped_cube] = true
-
-		if popped_cell.neighbor_mine_count == 0:
-			stack.append_array(CellUtils.cube_neighbors(popped_cube))
+		if not neighbor_cell.is_mine():
+			connected_cells.append(neighbor_cell)
 	return connected_cells
 
 
 func _are_all_non_mine_cells_revealed() -> bool:
 	for cell: CellComponent in cells.values():
-		if cell.state != Enums.CellState.MINE and not cell.is_revealed:
+		if not cell.is_mine() and not cell.is_revealed:
 			return false
 	return true
 
@@ -137,6 +130,9 @@ func _are_all_non_mine_cells_revealed() -> bool:
 func _select_cell(cell: CellComponent) -> void:
 	if is_mine_revealed or has_won:
 		return
+	if not at_least_one_cell_selected:
+		cells = hex_grid_generator.add_mines_to_grid(cells, MINE_COUNT, cell.pos)
+		at_least_one_cell_selected = true
 	cell.select()
 
 

@@ -12,11 +12,22 @@ func _init(cell_pos: Vector3i) -> void:
 	self.pos = cell_pos
 
 
+func is_mine() -> bool:
+	return state == Enums.CellState.MINE
+
+
+func is_empty() -> bool:
+	return state == Enums.CellState.EMPTY
+
+
+func is_number() -> bool:
+	return state == Enums.CellState.NUMBER
+
 func select():
+	print("Select")
 	if is_flagged:
 		return
 	reveal()
-
 
 
 func reveal():
