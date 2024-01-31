@@ -10,7 +10,7 @@ func generate_grid(start: Vector3i, radius_limit: int, mines: int) -> Dictionary
 	var grid_with_mines: Dictionary = _add_mines_to_grid(empty_grid, mines)
 	_update_mine_count(grid_with_mines)
 	return grid_with_mines
-	
+
 
 func _create_empty_grid(start: Vector3i, radius_limit: int) -> Dictionary:
 	var grid = {}
@@ -32,24 +32,24 @@ func _add_mines_to_grid(grid: Dictionary, mines: int) -> Dictionary:
 	for i in range(mines):
 		var random_cube: Vector3i = _random_cube_with_no_mine(grid, added_mines)
 		var random_cell: CellComponent = new_grid[random_cube]
-		random_cell.cell_state = Enums.CellState.MINE
+		random_cell.state = Enums.CellState.MINE
 		added_mines[random_cube] = true
 	return new_grid
 
 
 func _update_mine_count(grid: Dictionary) -> void:
 	for cell: CellComponent in grid.values():
-		if cell.cell_state == Enums.CellState.MINE:
+		if cell.state == Enums.CellState.MINE:
 			continue
 		cell.neighbor_mine_count = _calculate_neighbor_mine_count(grid, cell)
 		if cell.neighbor_mine_count > 0:
-			cell.cell_state = Enums.CellState.NUMBER
+			cell.state = Enums.CellState.NUMBER
 
 
 func _calculate_neighbor_mine_count(grid: Dictionary, cell: CellComponent) -> int:
 	var count := 0
 	for cube: Vector3i in CellUtils.cube_neighbors(cell.pos):
-		if cube in grid and grid[cube].cell_state == Enums.CellState.MINE:
+		if cube in grid and grid[cube].state == Enums.CellState.MINE:
 			count += 1
 	return count
 

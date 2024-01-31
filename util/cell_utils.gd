@@ -2,8 +2,8 @@ class_name CellUtils
 extends Node
 
 const cube_direction_vectors: Array[Vector3i] = [
-	Vector3i(+1, 0, -1), Vector3i(+1, -1, 0), Vector3i(0, -1, +1), 
-	Vector3i(-1, 0, +1), Vector3i(-1, +1, 0), Vector3i(0, +1, -1), 
+	Vector3i(+1, 0, -1), Vector3i(+1, -1, 0), Vector3i(0, -1, +1),
+	Vector3i(-1, 0, +1), Vector3i(-1, +1, 0), Vector3i(0, +1, -1),
 ]
 
 static var rng = RandomNumberGenerator.new()

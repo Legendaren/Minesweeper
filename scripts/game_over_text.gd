@@ -1,11 +1,11 @@
 extends RichTextLabel
+class_name GameOverText
 
 
 func _ready() -> void:
-	EventBus.cell_revealed.connect(on_mine_revealed)
+	EventBus.mine_revealed.connect(_on_mine_revealed)
 	visible = false
 
 
-func on_mine_revealed(cell: CellComponent):
-	if cell.cell_state == Enums.CellState.MINE:
-		visible = true
+func _on_mine_revealed(cell: CellComponent):
+	visible = true

@@ -5,7 +5,7 @@ class_name CellComponent
 var is_revealed := false
 var is_flagged := false
 var neighbor_mine_count := 0
-var cell_state := Enums.CellState.EMPTY
+var state := Enums.CellState.EMPTY
 var pos: Vector3i
 
 func _init(cell_pos: Vector3i) -> void:
@@ -13,16 +13,23 @@ func _init(cell_pos: Vector3i) -> void:
 
 
 func select():
-	#print("Cell selected")
-	#print("Cell neighbor mines: ", neighbor_mine_count)
-	#print("Cell has state ", Enums.CellState.keys()[cell_state])
+	if is_flagged:
+		return
 	reveal()
-	EventBus.cell_revealed.emit(self)
+
+
 
 func reveal():
+	if is_revealed:
+		return
+
 	is_revealed = true
+	EventBus.cell_revealed.emit(self)
+	if state == Enums.CellState.MINE:
+		EventBus.mine_revealed.emit(self)
 
 func flag():
 	if is_revealed:
 		return
 	is_flagged = not is_flagged
+	EventBus.cell_flagged.emit(self)
