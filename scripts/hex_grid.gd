@@ -22,9 +22,9 @@ const MINE_COUNT_TO_ATLAS := {
 }
 
 
-const RADIUS_LIMIT := 5
-const START_CUBE := Vector3i(0, 0, 0)
-const MINE_COUNT := 10
+@export_range(5, 25) var RADIUS_LIMIT := 15
+@export var START_CUBE := Vector3i(0, 0, 0)
+@export_range(1, 100) var MINE_COUNT := 80
 
 var cells := {}
 var is_mine_revealed := false
@@ -69,6 +69,8 @@ func _input(event: InputEvent) -> void:
 		return
 
 	var cell_cube: Vector3i =  CellUtils.oddr_to_cube(cell_pos)
+	if cell_cube not in cells:
+		return
 	var cell: CellComponent = cells[cell_cube]
 	if event.is_action_pressed("select_cell"):
 		_select_cell(cell)
