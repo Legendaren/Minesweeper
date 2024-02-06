@@ -1,22 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://d01f0agnpgnpd"]
+[gd_scene load_steps=4 format=3 uid="uid://d01f0agnpgnpd"]
 
-[ext_resource type="TileSet" uid="uid://bjisbgpk44ysx" path="res://assets/tileset/hex_tile_set.tres" id="2_fbrv7"]
+[ext_resource type="PackedScene" uid="uid://cxlw8bs1k2eex" path="res://scenes/hexagon_tilemap.tscn" id="1_d31o7"]
 [ext_resource type="Script" path="res://scripts/game_over_text.gd" id="3_lbu3m"]
-[ext_resource type="Script" path="res://scripts/hex_grid_generator.gd" id="3_nssew"]
-[ext_resource type="Script" path="res://scripts/hex_grid.gd" id="3_xgcwh"]
 [ext_resource type="Script" path="res://scripts/win_text.gd" id="5_dc5t6"]
 
 [node name="Root" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="Hexagon Tilemap" type="TileMap" parent="Camera2D"]
-tile_set = ExtResource("2_fbrv7")
-format = 2
-script = ExtResource("3_xgcwh")
-
-[node name="Hex Grid Generator" type="Node" parent="Camera2D/Hexagon Tilemap"]
-script = ExtResource("3_nssew")
+[node name="Hexagon Tilemap" parent="Camera2D" instance=ExtResource("1_d31o7")]
 
 [node name="CenterContainer" type="CenterContainer" parent="Camera2D"]
 anchors_preset = 15

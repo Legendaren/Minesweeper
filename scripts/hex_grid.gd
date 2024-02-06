@@ -4,10 +4,6 @@ class_name HexGrid
 const LAYER := 0
 const SOURCE_ID := 2
 
-const RADIUS_LIMIT := 15
-const START_CUBE := Vector3i(0, 0, 0)
-const MINE_COUNT := 50
-
 const ONE := Vector2i(0, 0)
 const TWO := Vector2i(1, 0)
 const THREE := Vector2i(2, 0)
@@ -25,6 +21,11 @@ const MINE_COUNT_TO_ATLAS := {
 	4: FOUR, 5: FIVE, 6: SIX
 }
 
+
+const RADIUS_LIMIT := 5
+const START_CUBE := Vector3i(0, 0, 0)
+const MINE_COUNT := 10
+
 var cells := {}
 var is_mine_revealed := false
 var has_won := false
@@ -35,11 +36,12 @@ func _ready() -> void:
 	EventBus.cell_revealed.connect(_on_cell_reveal)
 	EventBus.cell_flagged.connect(_on_cell_flagged)
 	EventBus.mine_revealed.connect(_on_mine_reveal)
+	assert(START_CUBE.x + START_CUBE.y + START_CUBE.z == 0, "x + y + z must be equal to 0")
 	cells = hex_grid_generator.generate_empty_grid(START_CUBE, RADIUS_LIMIT)
 	_update_grid()
 
 
-func _on_mine_reveal(cell: CellComponent):
+func _on_mine_reveal(_cell: CellComponent):
 	is_mine_revealed = true
 
 
@@ -133,7 +135,7 @@ func _select_cell(cell: CellComponent) -> void:
 	if not at_least_one_cell_selected:
 		cells = hex_grid_generator.add_mines_to_grid(cells, MINE_COUNT, cell.pos)
 		at_least_one_cell_selected = true
-	cell.select()
+	cell.reveal()
 
 
 func _flag_cell(cell: CellComponent) -> void:

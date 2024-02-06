@@ -3,6 +3,9 @@ class_name HexGridGenerator
 
 const NO_SELECTED_CUBE := Vector3i(0, 0, -1)
 
+## The amount of empty neighboring adjacent cells for starting cell (first click)
+@export_range(2, 10) var distance_limit: int = 2
+
 ## Generate a hex grid in a Dictionary
 ## Key = cube coordinate
 ## Value = object of type CellComponent
@@ -68,7 +71,6 @@ func _random_cube_with_no_mine(grid: Dictionary, added_mines: Dictionary, start_
 
 func _remove_invalid_mine_positions(grid: Dictionary, start_cube: Vector3i):
 	var valid_cubes: Array[Vector3i] = []
-	const distance_limit := 2
 	for cube in grid.keys():
 		if CellUtils.cube_distance(start_cube, cube) > distance_limit:
 			valid_cubes.append(cube)

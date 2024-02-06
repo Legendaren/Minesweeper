@@ -1,4 +1,4 @@
-extends Node
+extends Resource
 class_name CellComponent
 
 
@@ -23,15 +23,9 @@ func is_empty() -> bool:
 func is_number() -> bool:
 	return state == Enums.CellState.NUMBER
 
-func select():
-	print("Select")
-	if is_flagged:
-		return
-	reveal()
-
 
 func reveal():
-	if is_revealed:
+	if is_revealed or is_flagged:
 		return
 
 	is_revealed = true
