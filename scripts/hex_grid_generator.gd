@@ -1,5 +1,6 @@
-extends Node
+@tool
 class_name HexGridGenerator
+extends Node
 
 const NO_SELECTED_CUBE := Vector3i(0, 0, -1)
 

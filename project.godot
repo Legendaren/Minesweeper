@@ -24,6 +24,19 @@ Enums="*res://enum/enums.gd"
 
 enabled=PackedStringArray()
 
+[file_customization]
+
+folder_colors={
+"res://assets/": "green",
+"res://components/": "teal",
+"res://enum/": "yellow",
+"res://materials/": "purple",
+"res://scenes/": "blue",
+"res://scripts/": "orange",
+"res://shaders/": "red",
+"res://util/": "gray"
+}
+
 [input]
 
 select_cell={

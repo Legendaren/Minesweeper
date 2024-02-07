@@ -1,8 +1,9 @@
+@tool
 extends TileMap
 class_name HexGrid
 
 const LAYER := 0
-const SOURCE_ID := 2
+const SOURCE_ID := 0
 
 const ONE := Vector2i(0, 0)
 const TWO := Vector2i(1, 0)
@@ -11,7 +12,8 @@ const RED_MINE := Vector2(3, 0)
 const FOUR := Vector2i(0, 1)
 const FIVE := Vector2i(1, 1)
 const SIX := Vector2i(2, 1)
-const EMPTY := Vector2i(3, 1)
+const START_CELL := Vector2i(3, 1)
+const EMPTY := Vector2i(0, 3)
 const FLAG := Vector2i(0, 2)
 const HIDDEN := Vector2i(1, 2)
 const MINE := Vector2i(2, 2)
@@ -22,9 +24,26 @@ const MINE_COUNT_TO_ATLAS := {
 }
 
 
-@export_range(5, 25) var RADIUS_LIMIT := 15
-@export var START_CUBE := Vector3i(0, 0, 0)
-@export_range(1, 100) var MINE_COUNT := 80
+@export_range(5, 25) var RADIUS_LIMIT := 15:
+	get:
+		return RADIUS_LIMIT
+	set(value):
+		RADIUS_LIMIT = value
+		_create_grid()
+	
+@export_range(1, 100) var MINE_COUNT := 80:
+	get:
+		return MINE_COUNT
+	set(value):
+		MINE_COUNT = value
+		
+@export var START_CUBE := Vector3i(0, 0, 0):
+	get:
+		return START_CUBE
+	set(value):
+		START_CUBE = value
+		_create_grid()
+
 
 var cells := {}
 var is_mine_revealed := false
@@ -33,10 +52,16 @@ var at_least_one_cell_selected := false
 @onready var hex_grid_generator: HexGridGenerator = $"Hex Grid Generator"
 
 func _ready() -> void:
-	EventBus.cell_revealed.connect(_on_cell_reveal)
-	EventBus.cell_flagged.connect(_on_cell_flagged)
-	EventBus.mine_revealed.connect(_on_mine_reveal)
+	if not Engine.is_editor_hint():
+		EventBus.cell_revealed.connect(_on_cell_reveal)
+		EventBus.cell_flagged.connect(_on_cell_flagged)
+		EventBus.mine_revealed.connect(_on_mine_reveal)
 	assert(START_CUBE.x + START_CUBE.y + START_CUBE.z == 0, "x + y + z must be equal to 0")
+	_create_grid()
+
+
+func _create_grid():
+	clear()
 	cells = hex_grid_generator.generate_empty_grid(START_CUBE, RADIUS_LIMIT)
 	_update_grid()
 
@@ -57,7 +82,10 @@ func _on_cell_flagged(cell: CellComponent):
 
 func _update_grid() -> void:
 	for cell: CellComponent in cells.values():
-		_update_cell(cell)
+		if Engine.is_editor_hint():
+			_update_cell_editor(cell)
+		else:
+			_update_cell(cell)
 
 
 func _input(event: InputEvent) -> void:
@@ -98,6 +126,13 @@ func _update_cell(cell: CellComponent) -> void:
 		has_won = true
 		EventBus.game_win.emit()
 
+
+func _update_cell_editor(cell: CellComponent):
+	var oddr: Vector2i = CellUtils.cube_to_oddr(cell.pos)
+	if cell.pos == START_CUBE:
+		_set_cell_v2(oddr, START_CELL)
+	else:
+		_set_cell_v2(oddr, HIDDEN)
 
 func _reveal_cell(cell: CellComponent) -> void:
 	cell.reveal()
