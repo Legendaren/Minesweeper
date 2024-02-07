@@ -24,24 +24,33 @@ const MINE_COUNT_TO_ATLAS := {
 }
 
 
-@export_range(5, 25) var RADIUS_LIMIT := 15:
+@export_range(5, 25) var radius_limit := 15:
 	get:
-		return RADIUS_LIMIT
+		return radius_limit
 	set(value):
-		RADIUS_LIMIT = value
+		radius_limit = value
 		_create_grid()
-	
-@export_range(1, 100) var MINE_COUNT := 80:
+
+@export_range(1, 100) var mine_count := 80:
 	get:
-		return MINE_COUNT
+		return mine_count
 	set(value):
-		MINE_COUNT = value
-		
-@export var START_CUBE := Vector3i(0, 0, 0):
+		mine_count = value
+
+@export_group("Start Cube")
+@export var show_start_cube := true:
 	get:
-		return START_CUBE
+		return show_start_cube
 	set(value):
-		START_CUBE = value
+		show_start_cube = value
+		_create_grid()
+
+@export var start_cube_position := Vector3i(0, 0, 0):
+	get:
+		return start_cube_position
+	set(value):
+		start_cube_position = value
+		update_configuration_warnings()
 		_create_grid()
 
 
@@ -56,13 +65,19 @@ func _ready() -> void:
 		EventBus.cell_revealed.connect(_on_cell_reveal)
 		EventBus.cell_flagged.connect(_on_cell_flagged)
 		EventBus.mine_revealed.connect(_on_mine_reveal)
-	assert(START_CUBE.x + START_CUBE.y + START_CUBE.z == 0, "x + y + z must be equal to 0")
+	assert(start_cube_position.x + start_cube_position.y + start_cube_position.z == 0, "x + y + z must be equal to 0")
 	_create_grid()
 
 
+func _get_configuration_warnings():
+	var warnings: Array[String] = []
+	if start_cube_position.x + start_cube_position.y + start_cube_position.z != 0:
+		warnings.append("Start cube must consist of valid coordinates (x + y + z = 0)")
+	return warnings
+
 func _create_grid():
 	clear()
-	cells = hex_grid_generator.generate_empty_grid(START_CUBE, RADIUS_LIMIT)
+	cells = hex_grid_generator.generate_empty_grid(start_cube_position, radius_limit)
 	_update_grid()
 
 
@@ -129,7 +144,7 @@ func _update_cell(cell: CellComponent) -> void:
 
 func _update_cell_editor(cell: CellComponent):
 	var oddr: Vector2i = CellUtils.cube_to_oddr(cell.pos)
-	if cell.pos == START_CUBE:
+	if cell.pos == start_cube_position and show_start_cube:
 		_set_cell_v2(oddr, START_CELL)
 	else:
 		_set_cell_v2(oddr, HIDDEN)
@@ -170,7 +185,7 @@ func _select_cell(cell: CellComponent) -> void:
 	if is_mine_revealed or has_won:
 		return
 	if not at_least_one_cell_selected:
-		cells = hex_grid_generator.add_mines_to_grid(cells, MINE_COUNT, cell.pos)
+		cells = hex_grid_generator.add_mines_to_grid(cells, mine_count, cell.pos)
 		at_least_one_cell_selected = true
 	cell.reveal()
 

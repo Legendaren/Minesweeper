@@ -7,5 +7,5 @@ func _ready() -> void:
 	visible = false
 
 
-func _on_mine_revealed(cell: CellComponent):
+func _on_mine_revealed(_cell: CellComponent):
 	visible = true
